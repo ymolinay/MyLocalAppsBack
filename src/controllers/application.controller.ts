@@ -17,7 +17,7 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {Application} from '../models';
+import {AppDetail, Application, ApplicationWithDetails} from '../models';
 import {ApplicationRepository} from '../repositories';
 import {AppDetailRepository} from '../repositories';
 
@@ -76,7 +76,9 @@ export class ApplicationController {
   async find(
     @param.filter(Application) filter?: Filter<Application>,
   ): Promise<Application[]> {
-    return this.applicationRepository.find(filter);
+
+    const dd = this.applicationRepository.find(filter);
+    return dd;
   }
 
   @patch('/applications')
@@ -111,13 +113,36 @@ export class ApplicationController {
     @param.path.string('id') id: string,
     @param.filter(Application, {exclude: 'where'}) filter?: FilterExcludingWhere<Application>
   ): Promise<Application> {
+/*
 
     const application = await this.applicationRepository.findById(id, filter);
-    // const appDetails = await this.appDetailRepository.findOne({ where: { appId: id } });
+    const appDetails = await this.appDetailRepository.findOne({ where: { appId: id } });
 
-    // return { ...application, details: appDetails };
+    application.details = appDetails;
 
     return application;
+*/
+
+    /*
+    // Crea una nueva instancia de Application
+    const result = new Application(application.toObject());
+
+    // Asigna la propiedad details
+    result.details = appDetails;
+
+    return result;
+     */
+
+    const application = await this.applicationRepository.findById(id, filter);
+    const appDetails = await this.appDetailRepository.findOne({ where: { appId: id } });
+
+    // Crea una nueva instancia de ApplicationWithDetails
+    const result = new ApplicationWithDetails(application.toObject());
+
+    // Asigna la propiedad details
+    result.details = appDetails;
+
+    return result;
   }
 
   @patch('/applications/{id}')

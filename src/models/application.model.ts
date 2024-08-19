@@ -1,6 +1,13 @@
 import {Entity, model, property} from '@loopback/repository';
 
-@model({settings: {strict: false}})
+@model({
+  settings: {
+    strict: false,
+    mongodb: {
+      collection: 'applications',
+    },
+  },
+})
 export class Application extends Entity {
   @property({
     type: 'string',
@@ -23,7 +30,7 @@ export class Application extends Entity {
 
   @property({
     type: 'string',
-    default: "",
+    default: '',
   })
   description?: string;
 
@@ -45,7 +52,7 @@ export class Application extends Entity {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [prop: string]: any;
 
-  constructor(data?: Partial<Application>) {
+  constructor(data?: Object) {
     super(data);
   }
 }
